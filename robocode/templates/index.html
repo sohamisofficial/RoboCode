@@ -1,0 +1,203 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+  <meta charset="UTF-8">
+  <meta name="viewport" content="width=device-width, initial-scale=1.0">
+  <style>
+    /* CSS code with navbar spacing */
+    body {
+      background-image: url("/static/image/1.jpg");
+    }
+
+    .navbar {
+      display: flex;
+      justify-content: space-between;
+      align-items: flex-start;
+      padding: 10px;
+      background: linear-gradient(to right, #6d0443, #2e011c);
+    }
+
+    .navbar a {
+      color: white;
+      margin-right: 20px; /* Adjust the value to set the desired spacing */
+    }
+
+    .logo {
+      color: red;
+      margin-left: 20px; /* Adjust the value to set the desired spacing */
+    }
+  </style>
+  <title>RoboCode</title>
+</head>
+<body>
+  <div class="navbar">
+    <div class="logo">
+      <h3>RoboCode</h3>
+    </div>
+    <div class="nav-links">
+      <a href="http://127.0.0.1:5000/" style="color: white;" >Home</a>
+      <a href="http://127.0.0.1:5000/about" style="color: white;">About</a>
+    </div>
+  </div>
+
+  <h1><p style="color: darksalmon;">Here on this website you can exploror different code</p></h1>
+</body>
+  
+<body style="color: cornsilk;">
+  <h2> <p style="text-align: center;">************************ Rc car ************************</p></h2>
+<p>//c++
+#include LiquidCrystal.h <br>
+const int rs = 13, en = 12, d4 = 11, d5 = 10, d6 = A5, d7 = A4;<br>
+LiquidCrystal lcd(rs, en, d4, d5, d6, d7);<br>
+<br>
+<br>
+int sensorValue;<br>
+int sensorPin = A3;<br>
+int tc = 100;><br>
+<br>
+<br>
+int motor1Pin1 = 2; // pin 2 on IC<br>
+int motor1Pin2 = 3; // pin 7 on IC<br>
+<br>
+int motor2Pin1 = 4; // pin 10 on IC<br>
+int motor2Pin2 = 5; // pin 15 on IC<br>
+ // pin 9 on IC><br>
+<br>
+int state;><br>
+int flag = 0;><br>
+int stateStop = 0;><br>
+<br>
+void setup() {<br>
+  lcd.begin(16, 2);<br>
+  <br>
+  pinMode(sensorPin, INPUT);<br>
+  <br>
+  // sets the pins as outputs:<br>
+  pinMode(motor1Pin1, OUTPUT);<br>
+  pinMode(motor1Pin2, OUTPUT);<br>
+  <br>
+  pinMode(motor2Pin1, OUTPUT);<br>
+  pinMode(motor2Pin2, OUTPUT);<br>
+  <br>
+  <br>
+  // sets enable1Pin and enable2Pin high so that motor can turn on:<br>
+  <br>
+  <br>
+  // initialize serial communication at 9600 bits per second:<br>
+  Serial.begin(9600);<br>
+}<br>
+<br>
+void loop() {<br>
+  lcd.setCursor(0, 1);<br>
+  //Start Serial Communication<br>
+  if (Serial.available() > 0) {<br>
+    state = Serial.read();<br>
+    flag = 0;<br>
+  }<br>
+  <br>
+  // if the state is '1' the DC motor will go forward<br>
+  if (state == '1') {<br>
+    lcd.print("Forward");<br>
+    digitalWrite(motor1Pin1, HIGH);<br>
+    digitalWrite(motor1Pin2, LOW);<br>
+    digitalWrite(motor2Pin1, HIGH);<br>
+    digitalWrite(motor2Pin2, LOW);<br>
+    <br>
+    if (flag == 0) {<br>
+      Serial.println("Go Forward!");<br>
+      flag = 1;<br>
+    }<br>
+    delay(3000);<br>
+    <br>
+  }<br>
+  <br>
+  // if the state is '2' the motor will turn left<br>
+  else if (state == '2') {<br>
+    digitalWrite(motor1Pin1, HIGH);<br>
+    digitalWrite(motor1Pin2, LOW);<br>
+    digitalWrite(motor2Pin1, LOW);<br>
+    digitalWrite(motor2Pin2, HIGH);<br>
+    <br>
+    if (flag == 0) {<br>
+      Serial.println("Turn LEFT");<br>
+      flag = 1;<br>
+    }<br>
+    delay(3000);<br>
+    <br>
+  }<br>
+  <br>
+  // if the state is '3' the motor will Stop<br>
+  else if (state == '3' || stateStop == 1) {<br>
+    digitalWrite(motor1Pin1, LOW);<br>
+    digitalWrite(motor1Pin2, LOW);<br>
+    digitalWrite(motor2Pin1, LOW);<br>
+    digitalWrite(motor2Pin2, LOW);<br>
+    lcd.print("hello, world!");<br>
+    <br>
+    if (flag == 0) {<br>
+      Serial.println("STOP!");<br>
+      flag = 1;<br>
+    }<br>
+    <br>
+  }<br>
+  <br>
+  // if the state is '4' the motor will turn right<br>
+  else if (state == '4') {<br>
+    digitalWrite(motor1Pin1, LOW);<br>
+    digitalWrite(motor1Pin2, HIGH);<br>
+    digitalWrite(motor2Pin1, HIGH);<br>
+    digitalWrite(motor2Pin2, LOW);<br>
+    <br>
+    if (flag == 0) {<br>
+      Serial.println("Turn RIGHT");<br>
+      flag = 1;<br>
+    }<br>
+    <br>
+    delay(3000);<br>
+    <br>
+  }<br>
+  <br>
+  // if the state is '5' the motor will Reverse<br>
+  else if (state == '5') {<br>
+    digitalWrite(motor1Pin1, LOW);<br>
+    digitalWrite(motor1Pin2, HIGH);<br>
+    digitalWrite(motor2Pin1, LOW);<br>
+    digitalWrite(motor2Pin2, HIGH);<br>
+    <br>
+    if (flag == 0) {<br>
+      Serial.println("Reverse!");<br>
+      flag = 1;<br>
+    }<br>
+    <br>
+    delay(3000);<br>
+    <br>
+  }<br>
+  else if (state == '6') {<br>
+    sensorValue = analogRead(sensorPin); // read analog input pin A5<br>
+    Serial.print("AirQuality Value: ");<br>
+    Serial.println(sensorValue, DEC); // prints the value read<br>
+  }<br>
+  else if (state == '7') {<br>
+      digitalWrite(6, HIGH);<br>
+      Serial.println("Vaccum cleaner");<br>
+      delay(5000);<br>
+  }<br>
+  else if (state == '8') {<br>
+      digitalWrite(6, LOW);<br>
+      Serial.println("Vaccum cleaner off");<br>
+      delay(5000);<br>
+  }<br>
+}<br>
+<br>
+  </p>
+</body>
+<h2> <p style="text-align: center;">************************ ballon car ************************</p></h2>
+<div style="text-align: center;">
+  <img src="/static/image/2.jpg" alt="Image" style="width: 5cm; height: 5cm;">
+</div>
+<exp>
+  <p>
+    Here,the ballon is left out of hte back of car and then because of that forse the car move forward
+  </p>
+</exp>
+</html>
